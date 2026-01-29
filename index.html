@@ -259,6 +259,7 @@
         .book-image {
             height: 220px;
             overflow: hidden;
+            position: relative;
         }
 
         .book-image img {
@@ -268,8 +269,20 @@
             transition: var(--transition);
         }
 
-        .book-card:hover .book-image img {
-            transform: scale(1.05);
+        .book-card:hover .book-image img.front-image {
+            opacity: 0;
+        }
+
+        .book-card .book-image img.back-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .book-card:hover .book-image img.back-image {
+            opacity: 1;
         }
 
         .book-info {
@@ -558,12 +571,29 @@
             border-radius: var(--border-radius);
             overflow: hidden;
             box-shadow: var(--shadow);
+            position: relative;
         }
 
         .modal-book-image img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+        }
+
+        .modal-book-image .back-image {
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .modal-book-image:hover .front-image {
+            opacity: 0;
+        }
+
+        .modal-book-image:hover .back-image {
+            opacity: 1;
         }
 
         .modal-book-info h2 {
@@ -656,6 +686,7 @@
             height: 90px;
             border-radius: 5px;
             overflow: hidden;
+            position: relative;
         }
 
         .cart-item-image img {
@@ -1438,103 +1469,20 @@
         const TELEGRAM_BOT_TOKEN = '8328780294:AAGNuKUIFfg0gylrgFqf3U5fBQa8yoWBA54';
         const TELEGRAM_CHAT_ID = '848066586'; // تم التحديث بناءً على JSON المقدم
         
-        // بيانات الكتب
+        // بيانات الكتب (تم مسح جميع الكتب باستثناء كتاب الخطايا)
         const books = [
             {
                 id: 1,
-                title: "الأيام: سيرة ذاتية",
-                author: "طه حسين",
+                title: "الخطايا",
+                author: "جهاد سالم شحاتة",
                 category: "literature",
-                description: "سيرة ذاتية للأديب طه حسين يروي فيها أيام الطفولة والصبا، ويصف حياته في الأزهر والجامعة المصرية.",
-                price: 55.00,
-                image: "https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80",
-                pages: 320,
-                rating: 4.8,
-                featured: true
-            },
-            {
-                id: 2,
-                title: "العلم وتطور المجتمع",
-                author: "عبدالسلام الزنفلي",
-                category: "science",
-                description: "كتاب يتناول دور العلم في تطور المجتمعات عبر العصور، مع دراسة حالة لتطور المجتمعات العربية.",
-                price: 65.00,
-                image: "https://images.unsplash.com/photo-1532012197267-da84d127e765?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w-1350&q=80",
-                pages: 280,
-                rating: 4.5,
-                featured: false
-            },
-            {
-                id: 3,
-                title: "تاريخ الحضارات العربية",
-                author: "علي الشرقاوي",
-                category: "history",
-                description: "دراسة شاملة لتاريخ الحضارات العربية منذ الجاهلية حتى العصر الحديث.",
-                price: 75.00,
-                image: "https://images.unsplash.com/photo-1568667256549-094345857637?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80",
-                pages: 450,
+                description: "الخطيئة ظلام يملأ النفس ، حجر تتعثر به كلما نهضت ، جرح عميق متقيح لا يفيد معه الدواء ، طريق معوج لا يستقيم مهما أصلحته ، لحظة ضعف عندما تناسيت أخلاقك وخرجت عن أصولك ، صراع بين القيم والغرائز ، الخطيئة حقيقة لابد من الاعتراف بها، والاعتراف بالحق فضيلة",
+                price: 80.00,
+                image: "Book images/Sins1.jpg",
+                backImage: "Book images/Sins2.jpg",
+                pages: 300,
                 rating: 4.9,
                 featured: true
-            },
-            {
-                id: 4,
-                title: "فلسفة العلم والمعرفة",
-                author: "محمد العابد",
-                category: "philosophy",
-                description: "دراسة فلسفية لمناهج العلم وطبيعة المعرفة الإنسانية في عصر المعلومات.",
-                price: 60.00,
-                image: "https://images.unsplash.com/photo-1535905557558-afc4877a26fc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80",
-                pages: 310,
-                rating: 4.6,
-                featured: false
-            },
-            {
-                id: 5,
-                title: "قوة التفكير الإيجابي",
-                author: "سارة النجاري",
-                category: "self-development",
-                description: "دليل عملي لتعزيز التفكير الإيجابي وتطوير الذات لتحقيق النجاح الشخصي والمهني.",
-                price: 45.00,
-                image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80",
-                pages: 240,
-                rating: 4.7,
-                featured: true
-            },
-            {
-                id: 6,
-                title: "قصص من التراث العربي",
-                author: "فاطمة الزهراء",
-                category: "literature",
-                description: "مجموعة قصصية مختارة من التراث العربي القديم، مع شرح للمفردات والمراجع التاريخية.",
-                price: 50.00,
-                image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80",
-                pages: 290,
-                rating: 4.4,
-                featured: false
-            },
-            {
-                id: 7,
-                title: "الثورة الصناعية الرابعة",
-                author: "خالد التكنولوجي",
-                category: "science",
-                description: "تحليل معمق للثورة الصناعية الرابعة وتأثيراتها على الاقتصاد والمجتمع والعمل.",
-                price: 70.00,
-                image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80",
-                pages: 350,
-                rating: 4.8,
-                featured: false
-            },
-            {
-                id: 8,
-                title: "المنطق وفن التفكير",
-                author: "أحمد المنطقي",
-                category: "philosophy",
-                description: "مدخل إلى علم المنطق وأساليب التفكير السليم وتحليل الحجج والبراهين.",
-                price: 55.00,
-                image: "https://images.unsplash.com/photo-1552058544-f2b08422138a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80",
-                pages: 275,
-                rating: 4.3,
-                featured: false
             }
         ];
 
@@ -1596,7 +1544,8 @@
                 bookCard.innerHTML = `
                     ${book.featured ? '<span class="book-badge">مميز</span>' : ''}
                     <div class="book-image">
-                        <img src="${book.image}" alt="${book.title}">
+                        <img src="${book.image}" alt="${book.title}" class="front-image">
+                        ${book.backImage ? `<img src="${book.backImage}" alt="${book.title}" class="back-image">` : ''}
                     </div>
                     <div class="book-info">
                         <div class="book-category">${getCategoryName(book.category)}</div>
@@ -1638,7 +1587,8 @@
             
             modalBookContent.innerHTML = `
                 <div class="modal-book-image">
-                    <img src="${book.image}" alt="${book.title}">
+                    <img src="${book.image}" alt="${book.title}" class="front-image">
+                    ${book.backImage ? `<img src="${book.backImage}" alt="${book.title}" class="back-image">` : ''}
                 </div>
                 <div class="modal-book-info">
                     <h2>${book.title}</h2>
