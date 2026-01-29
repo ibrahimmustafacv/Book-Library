@@ -328,36 +328,25 @@
             background-color: var(--accent-color);
         }
 
-        /* Featured Books Slider */
-        .featured-slider {
+        /* Featured Books - ثابت بدون سلايدر */
+        .featured-static {
             margin-bottom: 60px;
-            position: relative;
         }
 
-        .slider-container {
-            overflow: hidden;
+        .static-container {
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             position: relative;
+            overflow: hidden;
         }
 
-        .slider {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-
-        .slide {
-            min-width: 100%;
-            position: relative;
-        }
-
-        .slide img {
+        .static-container img {
             width: 100%;
             height: 400px;
             object-fit: cover;
         }
 
-        .slide-content {
+        .static-content {
             position: absolute;
             bottom: 0;
             right: 0;
@@ -367,44 +356,15 @@
             padding: 30px;
         }
 
-        .slide-content h3 {
+        .static-content h3 {
             font-size: 1.8rem;
             margin-bottom: 10px;
         }
 
-        .slide-content p {
+        .static-content p {
             font-size: 1rem;
             max-width: 600px;
             opacity: 0.9;
-        }
-
-        .slider-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: none;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            font-size: 1.3rem;
-            cursor: pointer;
-            transition: var(--transition);
-            backdrop-filter: blur(5px);
-            z-index: 10;
-        }
-
-        .slider-btn:hover {
-            background-color: rgba(255, 255, 255, 0.3);
-        }
-
-        .slider-prev {
-            right: 15px;
-        }
-
-        .slider-next {
-            left: 15px;
         }
 
         /* Features Section */
@@ -765,11 +725,11 @@
                 grid-template-columns: 1fr;
             }
             
-            .slide img {
+            .static-container img {
                 height: 350px;
             }
             
-            .slide-content h3 {
+            .static-content h3 {
                 font-size: 1.6rem;
             }
         }
@@ -862,30 +822,16 @@
                 font-size: 0.85rem;
             }
             
-            .slide-content {
+            .static-content {
                 padding: 20px;
             }
             
-            .slide-content h3 {
+            .static-content h3 {
                 font-size: 1.4rem;
             }
             
-            .slide-content p {
+            .static-content p {
                 font-size: 0.9rem;
-            }
-            
-            .slider-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.1rem;
-            }
-            
-            .slider-prev {
-                right: 10px;
-            }
-            
-            .slider-next {
-                left: 10px;
             }
             
             .features {
@@ -978,22 +924,16 @@
                 margin-bottom: 25px;
             }
             
-            .slide img {
+            .static-container img {
                 height: 250px;
             }
             
-            .slide-content h3 {
+            .static-content h3 {
                 font-size: 1.2rem;
             }
             
-            .slide-content p {
+            .static-content p {
                 font-size: 0.85rem;
-            }
-            
-            .slider-btn {
-                width: 35px;
-                height: 35px;
-                font-size: 1rem;
             }
             
             .modal-content {
@@ -1044,11 +984,11 @@
                 font-size: 1.5rem;
             }
             
-            .slide-content {
+            .static-content {
                 padding: 15px;
             }
             
-            .slide-content h3 {
+            .static-content h3 {
                 font-size: 1.1rem;
             }
         }
@@ -1096,40 +1036,16 @@
         </div>
     </section>
 
-    <!-- Featured Books Slider -->
-    <section class="featured-slider" id="featured">
+    <!-- Featured Books - ثابت بدون سلايدر -->
+    <section class="featured-static" id="featured">
         <div class="container">
             <h2 class="section-title">كتب مميزة</h2>
-            <div class="slider-container">
-                <div class="slider" id="slider">
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80" alt="كتاب مميز">
-                        <div class="slide-content">
-                            <h3>عالم الكتب الرقمية</h3>
-                            <p>مجموعة مختارة من أفضل الكتب في الأدب والفنون والعلوم، متاحة للتحميل الفوري.</p>
-                        </div>
-                    </div>
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1512820790803-83ca734da794?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80" alt="كتاب مميز">
-                        <div class="slide-content">
-                            <h3>أدباء القرن الحادي والعشرين</h3>
-                            <p>أحدث الإصدارات لأشهر الكتاب العرب والعالميين في مختلف المجالات الأدبية.</p>
-                        </div>
-                    </div>
-                    <div class="slide">
-                        <img src="https://images.unsplash.com/photo-1506880018603-83d5b814b5a6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80" alt="كتاب مميز">
-                        <div class="slide-content">
-                            <h3>كتب تطوير الذات</h3>
-                            <p>مجموعة كتب تساعدك على تطوير مهاراتك وتحقيق أهدافك الشخصية والمهنية.</p>
-                        </div>
-                    </div>
+            <div class="static-container">
+                <img src="https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1350&q=80" alt="كتاب مميز">
+                <div class="static-content">
+                    <h3>عالم الكتب الرقمية</h3>
+                    <p>مجموعة مختارة من أفضل الكتب في الأدب والفنون والعلوم، متاحة للتحميل الفوري.</p>
                 </div>
-                <button class="slider-btn slider-prev" id="slider-prev">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-                <button class="slider-btn slider-next" id="slider-next">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
             </div>
         </div>
     </section>
@@ -1396,9 +1312,6 @@
         const modalBookContent = document.getElementById('modal-book-content');
         const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
         const mainNav = document.getElementById('main-nav');
-        const slider = document.getElementById('slider');
-        const sliderPrev = document.getElementById('slider-prev');
-        const sliderNext = document.getElementById('slider-next');
 
         // تهيئة الموقع
         document.addEventListener('DOMContentLoaded', function() {
@@ -1692,33 +1605,6 @@
                     mainNav.classList.remove('active');
                 });
             });
-            
-            // سلايدر الكتب المميزة
-            let currentSlide = 0;
-            const slides = document.querySelectorAll('.slide');
-            
-            function showSlide(index) {
-                if (index >= slides.length) currentSlide = 0;
-                if (index < 0) currentSlide = slides.length - 1;
-                
-                slider.style.transform = `translateX(-${currentSlide * 100}%)`;
-            }
-            
-            sliderPrev.addEventListener('click', function() {
-                currentSlide++;
-                showSlide(currentSlide);
-            });
-            
-            sliderNext.addEventListener('click', function() {
-                currentSlide--;
-                showSlide(currentSlide);
-            });
-            
-            // تشغيل السلايدر تلقائيًا
-            setInterval(() => {
-                currentSlide++;
-                showSlide(currentSlide);
-            }, 5000);
             
             // النقر السلس للروابط الداخلية
             document.querySelectorAll('a[href^="#"]').forEach(anchor => {
