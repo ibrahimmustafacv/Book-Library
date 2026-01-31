@@ -896,6 +896,46 @@
             font-size: 1.5rem;
         }
 
+        /* Additional Project Buttons */
+        .project-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 40px 0;
+            flex-wrap: wrap;
+        }
+
+        .project-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .project-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6);
+        }
+
+        .project-btn.more-projects {
+            background-color: var(--secondary-color);
+            box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+        }
+
+        .project-btn.more-projects:hover {
+            box-shadow: 0 8px 20px rgba(231, 76, 60, 0.6);
+        }
+
         /* Responsive Styles - تحسينات للجوال */
         @media (max-width: 1200px) {
             .container {
@@ -1080,6 +1120,18 @@
             .social-icons {
                 justify-content: center;
             }
+            
+            .project-buttons {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .project-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1162,6 +1214,11 @@
             
             .footer-logo {
                 font-size: 1.6rem;
+            }
+            
+            .project-btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
             }
         }
 
@@ -1305,6 +1362,20 @@
             </div>
         </div>
     </section>
+
+    <!-- Additional Project Buttons -->
+    <div class="container">
+        <div class="project-buttons">
+            <a href="https://ibrahimmustafacv.github.io/" target="_blank" class="project-btn more-projects">
+                <i class="fas fa-folder-open"></i>
+                للمزيد من المشاريع
+            </a>
+            <a href="https://ibrahimmustafacv.github.io/my-social-media-page/" target="_blank" class="project-btn">
+                <i class="fas fa-share-alt"></i>
+                تابعنا هنا
+            </a>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer id="contact">
