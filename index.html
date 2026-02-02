@@ -782,6 +782,54 @@
             cursor: not-allowed;
         }
 
+        .payment-methods {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .payment-method {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .payment-method input {
+            display: none;
+        }
+
+        .payment-method label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            gap: 10px;
+        }
+
+        .payment-method label:hover {
+            border-color: var(--accent-color);
+        }
+
+        .payment-method input:checked + label {
+            border-color: var(--secondary-color);
+            background-color: rgba(231, 76, 60, 0.1);
+        }
+
+        .payment-method i {
+            font-size: 2rem;
+            color: var(--accent-color);
+        }
+
+        .payment-method.cash-on-delivery i {
+            color: var(--secondary-color);
+        }
+
         .file-upload-container {
             border: 2px dashed #ddd;
             border-radius: var(--border-radius);
@@ -818,6 +866,7 @@
             border-radius: var(--border-radius);
             padding: 15px;
             border-right: 4px solid var(--secondary-color);
+            margin-bottom: 20px;
         }
 
         .payment-info h4 {
@@ -1132,6 +1181,14 @@
                 max-width: 300px;
                 justify-content: center;
             }
+            
+            .payment-methods {
+                flex-direction: column;
+            }
+            
+            .payment-method {
+                width: 100%;
+            }
         }
 
         @media (max-width: 576px) {
@@ -1442,7 +1499,24 @@
             </button>
             <h2 class="section-title">إتمام الطلب</h2>
             
-            <div class="payment-info">
+            <div class="payment-methods">
+                <div class="payment-method cash-on-delivery">
+                    <input type="radio" id="cash-on-delivery" name="payment-method" value="cash-on-delivery" checked>
+                    <label for="cash-on-delivery">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <span>الدفع عند الاستلام</span>
+                    </label>
+                </div>
+                <div class="payment-method vodafone-cash">
+                    <input type="radio" id="vodafone-cash" name="payment-method" value="vodafone-cash">
+                    <label for="vodafone-cash">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>فودافون كاش</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="payment-info vodafone-info" id="vodafone-info" style="display: none;">
                 <h4>معلومات التحويل البنكي</h4>
                 <p>الرقم: <strong>01028630871</strong> (Vodafone Cash)</p>
                 <p>الاسم: <strong>جهاد سالم شحاتة</strong></p>
@@ -1461,8 +1535,13 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="governorate">المحافظة / الدولة *</label>
-                    <input type="text" id="governorate" name="governorate" required placeholder="أدخل محافظتك أو دولتك">
+                    <label for="governorate">المحافظة / المدينة *</label>
+                    <input type="text" id="governorate" name="governorate" required placeholder="أدخل محافظتك أو مدينتك">
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">العنوان التفصيلي *</label>
+                    <textarea id="address" name="address" rows="3" required placeholder="أدخل عنوانك التفصيلي (الحي، الشارع، رقم المنزل، الشقة...)" style="display: block;"></textarea>
                 </div>
                 
                 <div class="form-group">
@@ -1475,7 +1554,7 @@
                     <input type="text" id="total-price" name="total-price" readonly>
                 </div>
                 
-                <div class="form-group">
+                <div class="form-group vodafone-field" id="payment-proof-field" style="display: none;">
                     <label>صورة إثبات التحويل *</label>
                     <div class="file-upload-container">
                         <label class="file-upload-label" for="payment-proof">
@@ -1483,7 +1562,7 @@
                             <span>انقر لرفع صورة إثبات التحويل</span>
                             <span class="file-name" id="file-name">لم يتم رفع أي ملف</span>
                         </label>
-                        <input type="file" id="payment-proof" name="payment-proof" accept="image/*" required style="display: none;">
+                        <input type="file" id="payment-proof" name="payment-proof" accept="image/*" style="display: none;">
                     </div>
                 </div>
                 
@@ -1591,12 +1670,21 @@
         const loadingOverlay = document.getElementById('loading-overlay');
         const successMessage = document.getElementById('success-message');
         const closeSuccessBtn = document.getElementById('close-success');
+        const vodafoneInfo = document.getElementById('vodafone-info');
+        const paymentProofField = document.getElementById('payment-proof-field');
+        const cashOnDeliveryRadio = document.getElementById('cash-on-delivery');
+        const vodafoneCashRadio = document.getElementById('vodafone-cash');
+        const addressField = document.getElementById('address');
 
         // تهيئة الموقع
         document.addEventListener('DOMContentLoaded', function() {
             renderBooks('all');
             setupEventListeners();
             updateCartDisplay();
+            
+            // تفعيل حدث تغيير طريقة الدفع
+            cashOnDeliveryRadio.addEventListener('change', handlePaymentMethodChange);
+            vodafoneCashRadio.addEventListener('change', handlePaymentMethodChange);
         });
 
         // عرض الكتب في الشبكة
@@ -1804,20 +1892,43 @@
             booksListField.value = booksText;
             totalPriceField.value = `${cartTotal.toFixed(2)} جينة`;
             
+            // إعادة تعيين طريقة الدفع إلى الدفع عند الاستلام
+            cashOnDeliveryRadio.checked = true;
+            handlePaymentMethodChange();
+            
             // فتح نافذة الفورم
             checkoutModal.style.display = 'flex';
+        }
+
+        // التعامل مع تغيير طريقة الدفع
+        function handlePaymentMethodChange() {
+            const isVodafoneCash = vodafoneCashRadio.checked;
+            
+            if (isVodafoneCash) {
+                vodafoneInfo.style.display = 'block';
+                paymentProofField.style.display = 'block';
+                paymentProofInput.required = true;
+            } else {
+                vodafoneInfo.style.display = 'none';
+                paymentProofField.style.display = 'none';
+                paymentProofInput.required = false;
+            }
         }
 
         // إرسال الطلب إلى Telegram
         async function submitOrder(formData) {
             try {
                 // إعداد نص الرسالة
+                const paymentMethod = formData.paymentMethod === 'vodafone-cash' ? 'فودافون كاش' : 'الدفع عند الاستلام';
+                
                 const orderDetails = `
 📦 **طلب جديد - مكتبة جهاد سالم**
 
 👤 **العميل:** ${formData.fullName}
 📱 **الهاتف:** ${formData.phone}
-📍 **المحافظة:** ${formData.governorate}
+📍 **المحافظة/المدينة:** ${formData.governorate}
+🏠 **العنوان التفصيلي:** ${formData.address}
+💳 **طريقة الدفع:** ${paymentMethod}
 
 📚 **الكتب المطلوبة:**
 ${formData.booksList}
@@ -1846,8 +1957,8 @@ ${formData.booksList}
                     throw new Error('فشل في إرسال نص الطلب');
                 }
                 
-                // إذا كانت هناك صورة، إرسالها
-                if (formData.paymentProof) {
+                // إذا كانت هناك صورة (لفودافون كاش)، إرسالها
+                if (formData.paymentMethod === 'vodafone-cash' && formData.paymentProof) {
                     const photoFormData = new FormData();
                     photoFormData.append('chat_id', TELEGRAM_CHAT_ID);
                     photoFormData.append('photo', formData.paymentProof);
@@ -1882,24 +1993,30 @@ ${formData.booksList}
                 return;
             }
             
+            // التحقق من طريقة الدفع المختارة
+            const paymentMethod = document.querySelector('input[name="payment-method"]:checked').value;
+            
             // جمع بيانات الفورم
             const formData = {
                 fullName: document.getElementById('full-name').value,
                 phone: document.getElementById('phone').value,
                 governorate: document.getElementById('governorate').value,
+                address: document.getElementById('address').value,
                 booksList: booksListField.value,
                 totalPrice: totalPriceField.value,
+                paymentMethod: paymentMethod,
                 paymentProof: null
             };
             
-            // التحقق من رفع صورة
-            const fileInput = document.getElementById('payment-proof');
-            if (!fileInput.files || fileInput.files.length === 0) {
-                showNotification('يرجى رفع صورة إثبات التحويل', 'error');
-                return;
+            // التحقق من رفع صورة إذا كانت طريقة الدفع فودافون كاش
+            if (paymentMethod === 'vodafone-cash') {
+                const fileInput = document.getElementById('payment-proof');
+                if (!fileInput.files || fileInput.files.length === 0) {
+                    showNotification('يرجى رفع صورة إثبات التحويل', 'error');
+                    return;
+                }
+                formData.paymentProof = fileInput.files[0];
             }
-            
-            formData.paymentProof = fileInput.files[0];
             
             // إظهار شاشة التحميل
             loadingOverlay.style.display = 'flex';
@@ -1924,6 +2041,8 @@ ${formData.booksList}
                     // إعادة تعيين الفورم
                     checkoutForm.reset();
                     fileNameSpan.textContent = 'لم يتم رفع أي ملف';
+                    cashOnDeliveryRadio.checked = true;
+                    handlePaymentMethodChange();
                 }
             } catch (error) {
                 // إخفاء شاشة التحميل
